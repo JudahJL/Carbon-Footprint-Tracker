@@ -9,24 +9,24 @@
                 <table class="table table-bordered table-striped">
                     <thead class="table-dark">
                     <tr>
-                        <th>Date</th>
-                        <th>Total (kg CO₂/year)</th>
-                        <th>Transport (kg CO₂/year)</th>
-                        <th>Energy (kg CO₂/year)</th>
-                        <th>Diet (kg CO₂/year)</th>
-                        <th>Other (kg CO₂/year)</th>
-                        <th>Details</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Total (kg CO₂/year)</th>
+                        <th class="text-center">Transport (kg CO₂/year)</th>
+                        <th class="text-center">Energy (kg CO₂/year)</th>
+                        <th class="text-center">Diet (kg CO₂/year)</th>
+                        <th class="text-center">Other (kg CO₂/year)</th>
+                        <th class="text-center">Details</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for report in reports %}
                         <tr>
-                            <td>{{ report.created_at|default("N/A", true) }}</td>
-                            <td>{{ report.total_emissions|default("N/A", true) }}</td>
-                            <td>{{ report.transportation|default("N/A", true) }}</td>
-                            <td>{{ report.energy|default("N/A", true) }}</td>
-                            <td>{{ report.diet|default("N/A", true) }}</td>
-                            <td>{{ report.other|default("N/A", true) }}</td>
+                            <td class="text-center">{{ report.created_at|default("N/A", true) }}</td>
+                            <td class="text-center">{{ report.total_emissions|default("N/A", true) }}</td>
+                            <td class="text-center">{{ report.transportation|default("N/A", true) }}</td>
+                            <td class="text-center">{{ report.energy|default("N/A", true) }}</td>
+                            <td class="text-center">{{ report.diet|default("N/A", true) }}</td>
+                            <td class="text-center">{{ report.other|default("N/A", true) }}</td>
                             <td>
                                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal{{ loop.index }}">View</button>
                                 <button class="btn btn-danger" onclick="deleteFootprint({{ report.pk }})">Delete</button>
