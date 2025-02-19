@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="text-center mb-4">Carbon Footprint Tracker</h1>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form method="post" class="mb-4">
+                {{ csrf_input }}
+                <div class="mb-3">
+                    {{ form }}
+                </div>
+                <button type="submit" class="btn btn-primary">Calculate</button>
+            </form>
+
+            {% if result %}
+                <h3 class="mt-4">Results</h3>
+                <ul class="list-group mt-3">
+                    {% if result.total_emissions %}
+                        <li class="list-group-item">
+                            <strong>Total Emissions:</strong> {{ result.total_emissions.value }} kg CO₂/year
+                            <p class="small text-muted">{{ result.total_emissions.reason }}</p>
+                        </li>
+                    {% endif %}
+                    {% if result.transportation %}
+                        <li class="list-group-item">
+                            <strong>Transportation:</strong> {{ result.transportation.value }} kg CO₂/year
+                            <p class="small text-muted">{{ result.transportation.reason }}</p>
+                        </li>
+                    {% endif %}
+                    {% if result.energy %}
+                        <li class="list-group-item">
+                            <strong>Energy Usage:</strong> {{ result.energy.value }} kg CO₂/year
+                            <p class="small text-muted">{{ result.energy.reason }}</p>
+                        </li>
+                    {% endif %}
+                    {% if result.diet %}
+                        <li class="list-group-item">
+                            <strong>Diet:</strong> {{ result.diet.value }} kg CO₂/year
+                            <p class="small text-muted">{{ result.diet.reason }}</p>
+                        </li>
+                    {% endif %}
+                    {% if result.other %}
+                        <li class="list-group-item">
+                            <strong>Other:</strong> {{ result.other.value }} kg CO₂/year
+                            <p class="small text-muted">{{ result.other.reason }}</p>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

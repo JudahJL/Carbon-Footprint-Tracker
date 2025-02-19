@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="my-4 text-center">Carbon Footprint Dashboard</h2>
+
+        {% if reports %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Total (kg CO₂/year)</th>
+                        <th>Transport (kg CO₂/year)</th>
+                        <th>Energy (kg CO₂/year)</th>
+                        <th>Diet (kg CO₂/year)</th>
+                        <th>Other (kg CO₂/year)</th>
+                        <th>Details</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for report in reports %}
+                        <tr>
+                            <td>{{ report.created_at|default("N/A", true) }}</td>
+                            <td>{{ report.total_emissions|default("N/A", true) }}</td>
+                            <td>{{ report.transportation|default("N/A", true) }}</td>
+                            <td>{{ report.energy|default("N/A", true) }}</td>
+                            <td>{{ report.diet|default("N/A", true) }}</td>
+                            <td>{{ report.other|default("N/A", true) }}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal{{ loop.index }}">View</button>
+                                <button class="btn btn-danger" onclick="deleteFootprint({{ report.pk }})">Delete</button>
+                                <div class="modal fade" id="detailsModal{{ loop.index }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ loop.index }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="detailsModalLabel{{ loop.index }}">Emission Details</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {% if report.reasons.total %}<p><strong>Total Emissions:</strong> {{ report.reasons.total }}</p>{% endif %}
+                                                {% if report.reasons.transportation %}<p><strong>Transportation:</strong> {{ report.reasons.transportation }}</p>{% endif %}
+                                                {% if report.reasons.energy %}<p><strong>Energy:</strong> {{ report.reasons.energy }}</p>{% endif %}
+                                                {% if report.reasons.diet %}<p><strong>Diet:</strong> {{ report.reasons.diet }}</p>{% endif %}
+                                                {% if report.reasons.other %}<p><strong>Other:</strong> {{ report.reasons.other }}</p>{% endif %}
+                                                {% if report.recommendations %}
+                                                    <hr>
+                                                    <h6><strong>Recommendations:</strong></h6>
+                                                    <p>{{ report.recommendations }}</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                function deleteFootprint(footprintId) {
+                    fetch(`/delete/${footprintId}/`, {
+                        method: "DELETE",
+                        headers: {
+                            "X-CSRFToken": "{{ csrf_token }}",
+                            "Content-Type": "application/json"
+                        }
+                    }).then(response => {
+                        if (response.status === 204) {
+                            location.reload();
+                        } else {
+                            alert("Error deleting footprint.");
+                        }
+                    }).catch(error => console.error("Error:", error));
+                }
+            </script>
+        {% else %}
+            <p class="text-center text-muted">No carbon footprint data available.</p>
+        {% endif %}
+    </div>
+{% endblock %}
